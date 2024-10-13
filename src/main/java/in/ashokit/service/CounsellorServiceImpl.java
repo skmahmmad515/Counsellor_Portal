@@ -1,7 +1,6 @@
 package in.ashokit.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,36 +16,25 @@ import in.ashokit.repos.EnquiryRepo;
 public class CounsellorServiceImpl implements CounsellorService {
 
 	
-	
+	@Autowired
 	private CounsellorRepo counsellorRepo;
 	
-	
+	@Autowired
 	private EnquiryRepo enqRepo;
-	
-	
-	public CounsellorServiceImpl(CounsellorRepo counsellorRepo,EnquiryRepo enqRepo )
-	{
-		this.counsellorRepo=counsellorRepo;
-		this.enqRepo=enqRepo;
-	}
 	
 	
 	@Override
 	public boolean register(Counsellor counsellor) {
 		Counsellor savedCounsellor = counsellorRepo.save(counsellor);
-		if(null != savedCounsellor.getCounsellorId())
-		{
-			return true;
-		}
-		return false;
+		return null != savedCounsellor.getCounsellorId();
+		
 	}
 
 	@Override
 	public Counsellor login(String email, String pwd) {
 
-		Counsellor counsellor = counsellorRepo.findByEmailAndPwd(email, pwd);
+		return counsellorRepo.findByEmailAndPwd(email, pwd);
 
-		return counsellor;
 	}
 
 	
@@ -60,10 +48,10 @@ public class CounsellorServiceImpl implements CounsellorService {
 		int totalEnq = enqList.size();
 
 		int enrolledEnqs = enqList.stream().filter(e -> e.getEnqStatus().equals("Enrolled"))
-				.collect(Collectors.toList()).size();
-		int lostEnqs = enqList.stream().filter(e -> e.getEnqStatus().equals("Lost")).collect(Collectors.toList())
+				.toList().size();
+		int lostEnqs = enqList.stream().filter(e -> e.getEnqStatus().equals("Lost")).toList()
 				.size();
-		int openEnqs = enqList.stream().filter(e -> e.getEnqStatus().equals("Open")).collect(Collectors.toList())
+		int openEnqs = enqList.stream().filter(e -> e.getEnqStatus().equals("Open")).toList()
 				.size();
 
 		response.setTotalEnqs(totalEnq);

@@ -8,15 +8,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import in.ashokit.constants.AppConstants;
 import in.ashokit.dto.ViewEnqsFilterRequest;
 import in.ashokit.entity.Enquiry;
+import in.ashokit.exception.CounsellorException;
 import in.ashokit.service.EnquiryService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class EnquiryController {
-	
 
 	@Autowired
 	private EnquiryService enqService;
@@ -26,62 +28,56 @@ public class EnquiryController {
 		this.enqService = enqService;
 	}
 
-	
-	
 	@PostMapping("/filter-enqs")
-	public String filterEnquries(ViewEnqsFilterRequest viewEnqsFilterRequest,HttpServletRequest req,Model model)
-	{
-				// get existing session obj
-				HttpSession session = req.getSession(false);
-				Integer counsellorId = (Integer) session.getAttribute("counsellorId");
-					
-				List<Enquiry> enqsList = enqService.getEnquiresWithFilter(viewEnqsFilterRequest, counsellorId);
-			
-				model.addAttribute("enquiries",enqsList);
-				
-				return "viewEnqsPage";
-				
+	public String filterEnquries(ViewEnqsFilterRequest viewEnqsFilterRequest, HttpServletRequest req, Model model) {
+		// get existing session obj
+		HttpSession session = req.getSession(false);
+		Integer counsellorId = (Integer) session.getAttribute("counsellorId");
+
+		List<Enquiry> enqsList = enqService.getEnquiresWithFilter(viewEnqsFilterRequest, counsellorId);
+
+		model.addAttribute("enquiries", enqsList);
+
+		return "viewEnqsPage";
+
 	}
 
 	@GetMapping("/view-enquiries")
 	public String getEnquries(HttpServletRequest request, Model model) {
-		
+
 		// get existing session obj
 		HttpSession session = request.getSession(false);
-		Integer counsellorId = (Integer) session.getAttribute("counsellorId");
-		
-		List<Enquiry> enqList=enqService.getAllEnquiries(counsellorId);
-		
-		model.addAttribute("enquiries",enqList);
-		
+		Integer counsellorId = (Integer) session.getAttribute("ACTION_1");
+
+		List<Enquiry> enqList = enqService.getAllEnquiries(counsellorId);
+
+		model.addAttribute("enquiries", enqList);
+
 		// search form binding object
-		ViewEnqsFilterRequest filterReq=new ViewEnqsFilterRequest();
-		model.addAttribute("viewEnqsFilterRequest",filterReq);
-	
-		
+		ViewEnqsFilterRequest filterReq = new ViewEnqsFilterRequest();
+		model.addAttribute("viewEnqsFilterRequest", filterReq);
+
 		return "viewEnqsPage";
 	}
-
 
 	@GetMapping("/enquiry") // TO DISPLAY THE EMPTY ENQUIRY FORM
 	public String addEnquiryPage(Model model) {
 		Enquiry enquiry = new Enquiry();
-		model.addAttribute("enquiry", enquiry);
-		return "enquiryForm";
+		model.addAttribute(AppConstants.ENQUIRY_ATTRIBUTE, enquiry);
+		return AppConstants.ENQUIRY;
 	}
-	
+
 	@GetMapping("/editEnq")
-	public String editEnquiry(@RequestParam("enqId") Integer enqId,Model model)
-	{
-		
-		Enquiry enquiry =enqService.getEnquiryById(enqId);
-		model.addAttribute("enquiry",enquiry);
-		return "enquiryForm";
-		
+	public String editEnquiry(@RequestParam("enqId") Integer enqId, Model model) {
+
+		Enquiry enquiry = enqService.getEnquiryById(enqId);
+		model.addAttribute(AppConstants.ENQUIRY_ATTRIBUTE, enquiry);
+		return AppConstants.ENQUIRY;
+
 	}
-	
+
 	@PostMapping("/addEnq") // TO SAVE THE ENQUIRY
-	public String handleAddEnquiry(Enquiry enquiry, HttpServletRequest req, Model model) throws Exception {
+	public String handleAddEnquiry(Enquiry enquiry, HttpServletRequest req, Model model) throws CounsellorException {
 		// Get existing session obj
 		HttpSession session = req.getSession(false);
 		Integer counsellorId = (Integer) session.getAttribute("counsellorId");
@@ -98,8 +94,8 @@ public class EnquiryController {
 		// btn-info">Reset</a> </td>
 		// IN ENQUIRYCONTROLLER
 		enquiry = new Enquiry();
-		model.addAttribute("enquiry", enquiry);
+		model.addAttribute(AppConstants.ENQUIRY_ATTRIBUTE, enquiry);
 
-		return "enquiryForm";
+		return AppConstants.ENQUIRY;
 	}
 }

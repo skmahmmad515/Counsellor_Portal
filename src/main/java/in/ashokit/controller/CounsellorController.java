@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import in.ashokit.constants.AppConstants;
 import in.ashokit.dto.DashboardResponse;
 import in.ashokit.entity.Counsellor;
 import in.ashokit.service.CounsellorService;
@@ -14,8 +15,6 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CounsellorController {
-	
-	private static final String REGISTER_VIEW = "register";
 	
 
 
@@ -79,7 +78,7 @@ public class CounsellorController {
 		model.addAttribute("counsellor", cobj);
 
 		// returning view name
-		return "register";
+		return AppConstants.REGISTER;
 	}
 
 	@PostMapping("/register")
@@ -101,7 +100,7 @@ public class CounsellorController {
 			// failure
 			model.addAttribute("emsg", "Registration Failed");
 		}
-		return "";
+		return "register";
 	}
 
 	@GetMapping("/logout")

@@ -38,10 +38,6 @@ public class Enquiry {
 	@JoinColumn(name = "counsellorId")
 	private Counsellor counsellor;
 
-	public Enquiry() {
-
-	}
-
 	public Integer getEnqId() {
 		return enqId;
 	}

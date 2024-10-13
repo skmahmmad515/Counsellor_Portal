@@ -88,7 +88,5 @@ public class Counsellor {
 		this.updatedDate = updatedDate;
 	}
 
-	public Counsellor() {
-	}
 
 }
